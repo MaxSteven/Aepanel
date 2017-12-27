@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="aelib">
+    <file>aelib_logo_sm.png</file>
+  </qresource>
+</RCC>
