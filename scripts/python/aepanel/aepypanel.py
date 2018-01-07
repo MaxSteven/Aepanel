@@ -2,6 +2,8 @@ import sys
 import os
 import re
 import hou
+import subprocess
+import platform
 from PySide2 import QtWidgets, QtUiTools, QtGui, QtCore
 
 class ProjectManager( QtWidgets.QWidget ):
@@ -37,6 +39,8 @@ class ProjectManager( QtWidgets.QWidget ):
         self.gotoHipBtn.clicked.connect(self.gotoHip)
         self.incrBtn = self.ui.findChild(QtWidgets.QPushButton, 'incrBtn')
         self.incrBtn.clicked.connect(self.hipIncrementVersion)
+        self.explorerBtn = self.ui.findChild(QtWidgets.QPushButton, 'explorerBtn')
+        self.explorerBtn.clicked.connect(self.openInExplorer)
 
         # set the layout from the .ui file, placed in a scrollarea
         scrollarea = QtWidgets.QScrollArea(self)
@@ -59,6 +63,17 @@ class ProjectManager( QtWidgets.QWidget ):
     def openSceneWithButton(self):
         curr = self.fileList.currentItem()
         hou.hipFile.load(self.job +'/'+ str(curr.data(0)))
+
+    # Open in explorer window depending on OS
+    def openInExplorer(self):
+        platform = sys.platform
+        if platform == "win32":
+            # subprocess.Popen(["explorer", self.job])
+            os.startfile(self.job)
+        elif platform == "darwin": #osx
+            subprocess.Popen(["open", self.job])
+        else: #linux
+            subprocess.Popen(["xdg-open", self.job])
 
     def gotoHip(self):
         self.prevDirs.append(self.job)
